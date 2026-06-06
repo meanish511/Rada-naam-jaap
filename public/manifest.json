@@ -1,0 +1,24 @@
+{
+  "short_name": "Radha Jaap",
+  "name": "Sri Radha Naam Jaap Counter",
+  "description": "A serene devotional Radha Naam Jaap Counter with spiritual ambient music, custom daily targets, dynamic 108-bead Mala visualization, and daily jaap streak tracking.",
+  "icons": [
+    {
+      "src": "/pwa-icon.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#faf8f5",
+  "theme_color": "#ea580c",
+  "display": "standalone",
+  "orientation": "portrait"
+}

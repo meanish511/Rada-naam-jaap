@@ -8,3 +8,17 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 );
+
+// Register PWA Service Worker for offline meditation support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('Sacred Jaap PWA SW registered successfully: ', registration.scope);
+      })
+      .catch((err) => {
+        console.log('Sacred Jaap PWA SW registration failed: ', err);
+      });
+  });
+}
+
