@@ -1,0 +1,6 @@
+{
+  "name": "Radha Naam Jaap",
+  "description": "A serene devotional Radha Naam Jaap Counter with spiritual ambient music, custom daily targets, dynamic 108-bead Mala visualization, and daily jaap streak tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
