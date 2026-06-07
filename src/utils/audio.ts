@@ -14,8 +14,8 @@ class SacredSoundEngine {
   
   // Settings
   private baseFrequency = 130.81; // C3
-  private volume_drone = 0.3;
-  private volume_bell = 0.5;
+  private volume_drone = 0.5;
+  private volume_bell = 0.9;
   private currentString = 0;
 
   constructor() {
@@ -29,7 +29,7 @@ class SacredSoundEngine {
       this.ctx = new AudioCtx();
       
       this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.setValueAtTime(0.8, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(1.5, this.ctx.currentTime);
       this.masterGain.connect(this.ctx.destination);
 
       this.droneGain = this.ctx.createGain();
@@ -283,7 +283,7 @@ class SacredSoundEngine {
     utterance.lang = "hi-IN"; // Hindi vocal accent for Sanskrit names
     utterance.rate = 0.9;     // Calmer, slower speed
     utterance.pitch = 1.1;    // Gentle, bright pitch
-    utterance.volume = this.volume_bell * 0.7;
+    utterance.volume = 1.0;
 
     window.speechSynthesis.speak(utterance);
   }

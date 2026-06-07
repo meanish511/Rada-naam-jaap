@@ -5,12 +5,14 @@
 
 import React, { useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Language } from "../utils/translationHelper";
 
 interface MalaVisualizationProps {
   currentBead: number; // 0 to 107 (for 108 beads)
   roundsCompleted: number;
   onIncrement: () => void;
   beadSyllable: string; // The current holy syllable displayed inside the hub, e.g. "रा" or "धा"
+  language?: Language;
 }
 
 export const MalaVisualization: React.FC<MalaVisualizationProps> = ({
@@ -18,6 +20,7 @@ export const MalaVisualization: React.FC<MalaVisualizationProps> = ({
   roundsCompleted,
   onIncrement,
   beadSyllable,
+  language = "hi",
 }) => {
   const svgSize = 340;
   const cx = svgSize / 2;
@@ -207,7 +210,7 @@ export const MalaVisualization: React.FC<MalaVisualizationProps> = ({
           </AnimatePresence>
 
           <p className="text-[10px] uppercase tracking-widest text-amber-600 font-sans font-medium mt-1">
-            Tap to Chant
+            {language === "hi" ? "जाप के लिए छुएं" : "Tap to Chant"}
           </p>
 
           <div className="mt-2 flex flex-col items-center">
@@ -218,7 +221,7 @@ export const MalaVisualization: React.FC<MalaVisualizationProps> = ({
             <div className="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full bg-orange-50 border border-orange-100/50">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
               <span className="text-[10px] font-medium text-amber-800 uppercase tracking-wider font-sans">
-                Round {roundsCompleted + 1}
+                {language === "hi" ? "आवृत्ति (Mala)" : "Round"} {roundsCompleted + 1}
               </span>
             </div>
           </div>

@@ -6,6 +6,7 @@
 import React, { useMemo } from "react";
 import { Award, Calendar, Flame, History, Settings, TrendingUp, Trophy } from "lucide-react";
 import { JaapLog } from "../types";
+import { Language } from "../utils/translationHelper";
 
 interface DailyStatsProps {
   logs: JaapLog[];
@@ -13,6 +14,7 @@ interface DailyStatsProps {
   dailyTarget: number;
   onUpdateTarget: (target: number) => void;
   onClearHistory: () => void;
+  language?: Language;
 }
 
 export const DailyStats: React.FC<DailyStatsProps> = ({
@@ -21,6 +23,7 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
   dailyTarget,
   onUpdateTarget,
   onClearHistory,
+  language = "hi",
 }) => {
   // Current streak (consecutive days with at least 1 jaap)
   const streak = useMemo(() => {
@@ -94,7 +97,17 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
         count = todayCount;
       }
 
-      const dayName = d.toLocaleDateString("en-US", { weekday: "short" });
+      const daysHiMap: Record<string, string> = {
+        "Sun": "रवि",
+        "Mon": "सोम",
+        "Tue": "मंगल",
+        "Wed": "बुध",
+        "Thu": "गुरु",
+        "Fri": "शुक्र",
+        "Sat": "शनि"
+      };
+      const dayNameRaw = d.toLocaleDateString("en-US", { weekday: "short" });
+      const dayName = language === "hi" ? (daysHiMap[dayNameRaw] || dayNameRaw) : dayNameRaw;
       const formattedDate = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
       
       data.push({
@@ -105,7 +118,7 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
       });
     }
     return data;
-  }, [logs, todayCount]);
+  }, [logs, todayCount, language]);
 
   const maxChartCount = useMemo(() => {
     const max = Math.max(...chartData.map((d) => d.count), dailyTarget);
@@ -122,19 +135,21 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
       <div id="target-tracker-card" className="bg-white/80 backdrop-blur-md rounded-2xl p-5 border border-amber-100/60 shadow-sm flex flex-col justify-between">
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xs uppercase tracking-widest font-bold text-stone-500">Daily Target</h3>
+            <h3 className="text-xs uppercase tracking-widest font-bold text-stone-500">
+              {language === "hi" ? "दैनिक लक्ष्य" : "Daily Target"}
+            </h3>
             <Settings className="w-4 h-4 text-stone-400 cursor-pointer hover:text-amber-600 transition-colors" />
           </div>
 
-          <div className="flex items-baseline gap-1 mt-1">
+          <div className="flex items-baseline gap-1 mt-1 font-sans">
             <span className="font-mono text-4xl font-bold tracking-tight text-amber-700">{todayCount}</span>
-            <span className="text-stone-400 text-sm">/ {dailyTarget} jaaps</span>
+            <span className="text-stone-400 text-sm">/ {dailyTarget} {language === "hi" ? "जाप" : "jaaps"}</span>
           </div>
 
           {/* Core progress meter string */}
           <div className="mt-4">
             <div className="flex justify-between text-[11px] font-medium text-stone-500 mb-1.5">
-              <span>Goal Progress</span>
+              <span>{language === "hi" ? "लक्ष्य प्रगति" : "Goal Progress"}</span>
               <span className="text-amber-800 font-semibold">{progressPercent}%</span>
             </div>
             
@@ -149,19 +164,21 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
 
         {/* Target configuration picker */}
         <div className="mt-5 border-t border-amber-100/30 pt-4">
-          <p className="text-[11px] text-stone-500 font-medium mb-2.5">Adjust Daily Jaap Goal:</p>
+          <p className="text-[11px] text-stone-500 font-medium mb-2.5">
+            {language === "hi" ? "दैनिक लक्ष्य समायोजित करें:" : "Adjust Daily Jaap Goal:"}
+          </p>
           <div className="grid grid-cols-3 gap-2">
             {[108, 540, 1008].map((val) => (
               <button
                 key={val}
                 onClick={() => onUpdateTarget(val)}
-                className={`py-1.5 px-1 rounded-xl text-xs font-semibold tracking-tight transition-all border ${
+                className={`py-1.5 px-1 rounded-xl text-xs font-semibold tracking-tight transition-all border cursor-pointer ${
                   dailyTarget === val
                     ? "bg-amber-50 border-amber-400 text-amber-800 shadow-sm shadow-amber-50"
                     : "bg-white border-stone-100 text-stone-600 hover:bg-stone-50"
                 }`}
               >
-                {val} Jaaps
+                {val} {language === "hi" ? "जाप" : "Jaaps"}
               </button>
             ))}
           </div>
@@ -172,7 +189,9 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
       <div id="streak-scores-card" className="bg-white/80 backdrop-blur-md rounded-2xl p-5 border border-amber-100/60 shadow-sm flex flex-col justify-between">
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xs uppercase tracking-widest font-bold text-stone-500">Divine Consistency</h3>
+            <h3 className="text-xs uppercase tracking-widest font-bold text-stone-500">
+              {language === "hi" ? "साधना निरंतरता" : "Divine Consistency"}
+            </h3>
             <Award className="w-4 h-4 text-orange-500" />
           </div>
 
@@ -181,10 +200,14 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
               <div className="absolute top-1 right-1 opacity-10 group-hover:scale-110 transition-transform">
                 <Flame className="w-8 h-8 text-orange-600" />
               </div>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-orange-700/80">Active Streak</span>
+              <span className="text-[10px] uppercase font-bold tracking-wider text-orange-700/80">
+                {language === "hi" ? "सक्रिय दिनक्रम (Streak)" : "Active Streak"}
+              </span>
               <div className="flex items-center gap-1.5 mt-1">
                 <span className="font-mono text-3xl font-extrabold text-stone-850">{streak}</span>
-                <span className="text-xs font-semibold text-stone-500">{streak === 1 ? "Day" : "Days"}</span>
+                <span className="text-xs font-semibold text-stone-500">
+                  {language === "hi" ? "दिन" : streak === 1 ? "Day" : "Days"}
+                </span>
               </div>
             </div>
 
@@ -192,7 +215,9 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
               <div className="absolute top-1 right-1 opacity-10 group-hover:scale-110 transition-transform">
                 <Trophy className="w-8 h-8 text-amber-600" />
               </div>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-amber-700/80">Total Chanted</span>
+              <span className="text-[10px] uppercase font-bold tracking-wider text-amber-700/80">
+                {language === "hi" ? "कुल संकीर्तन (Total)" : "Total Chanted"}
+              </span>
               <div className="flex items-baseline gap-1 mt-1">
                 <span className="font-mono text-2xl font-extrabold text-stone-850">
                   {totalLifetimeCount}
@@ -202,12 +227,12 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
           </div>
         </div>
 
-        <div className="mt-4 text-[11px] text-stone-500 flex items-center gap-1.5 bg-stone-50 px-3 py-2 rounded-xl">
+        <div className="mt-4 text-[11px] text-stone-500 flex items-center gap-1.5 bg-stone-50 px-3 py-2 rounded-xl font-sans">
           <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" />
           <span>
             {streak >= 3
-              ? "Wonderful consistency! The divine power of sound stabilizes the heart."
-              : "Set a peaceful routine to chant Radha Naam daily at the same time."}
+              ? (language === "hi" ? "शानदार निरंतरता! दिव्य तरंग हृदय को स्थिरता प्रदान करती हैं।" : "Wonderful consistency! The divine power of sound stabilizes the heart.")
+              : (language === "hi" ? "प्रतिदिन एक ही समय पर नाम जाप करने और साधना का नियम बनाएं।" : "Set a peaceful routine to chant Radha Naam daily at the same time.")}
           </span>
         </div>
       </div>
@@ -216,7 +241,9 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
       <div id="progress-chart-card" className="bg-white/80 backdrop-blur-md rounded-2xl p-5 border border-amber-100/60 shadow-sm flex flex-col justify-between">
         <div>
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-xs uppercase tracking-widest font-bold text-stone-500">7-Day Jaap History</h3>
+            <h3 className="text-xs uppercase tracking-widest font-bold text-stone-500">
+              {language === "hi" ? "७-दिवसीय जाप इतिहास" : "7-Day Jaap History"}
+            </h3>
             <TrendingUp className="w-4 h-4 text-stone-400" />
           </div>
 
@@ -230,7 +257,7 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
                 <div key={d.dateStr} className="flex-1 flex flex-col items-center group relative h-full justify-end">
                   {/* Hover tooltip for exact figures */}
                   <div className="absolute -top-6 scale-0 group-hover:scale-100 transition-transform bg-stone-800 text-white text-[10px] font-mono px-1.5 py-0.5 rounded shadow z-20 whitespace-nowrap pointer-events-none">
-                    {d.count} jaaps
+                    {d.count} {language === "hi" ? "जाप" : "jaaps"}
                   </div>
 
                   {/* Visual Bar */}
@@ -262,13 +289,13 @@ export const DailyStats: React.FC<DailyStatsProps> = ({
         <div className="flex items-center justify-between mt-3 text-[10px] text-stone-400 border-t border-stone-100 pt-2.5">
           <div className="flex items-center gap-1">
             <Calendar className="w-3 h-3" />
-            <span>Daily Jaap Log</span>
+            <span>{language === "hi" ? "दैनिक संकीर्तन सूची" : "Daily Jaap Log"}</span>
           </div>
           <button
             onClick={onClearHistory}
-            className="hover:text-red-500 transition-colors uppercase font-semibold hover:underline"
+            className="hover:text-red-500 transition-colors uppercase font-semibold hover:underline cursor-pointer"
           >
-            Clear Records
+            {language === "hi" ? "इतिहास साफ करें" : "Clear Records"}
           </button>
         </div>
       </div>
